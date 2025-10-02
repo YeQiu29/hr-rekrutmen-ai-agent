@@ -55,7 +55,7 @@ class ProcessCvAnalysis implements ShouldQueue
 
         try {
             $cvPath = $this->applicant->applicantProfile->cv_path;
-            $fastApiUrl = env('FASTAPI_URL', 'http://127.0.0.1:8001');
+            $fastApiUrl = 'https://1a612a40dfef.ngrok-free.app';
 
             if (!Storage::disk('public')->exists($cvPath)) {
                 throw new \Exception("CV file not found at path: {$cvPath}");

@@ -41,11 +41,12 @@ class AiIntegrationController extends Controller
             \App\Models\CvAnalysisResult::where('job_vacancy_id', $vacancy->id)
                 ->whereIn('user_id', $applicants->pluck('id'))->delete();
 
-            $batch = \Illuminate\Support\Facades\Bus::batch([])->name("Analyze CVs for Vacancy: {$vacancy->id}")->dispatch();
-
+            $jobs = [];
             foreach ($applicants as $applicant) {
-                $batch->add(new \App\Jobs\ProcessCvAnalysis($applicant, $vacancy));
+                $jobs[] = new \App\Jobs\ProcessCvAnalysis($applicant, $vacancy);
             }
+
+            $batch = \Illuminate\Support\Facades\Bus::batch($jobs)->name("Analyze CVs for Vacancy: {$vacancy->id}")->dispatch();
 
             return response()->json(['batch_id' => $batch->id]);
 
